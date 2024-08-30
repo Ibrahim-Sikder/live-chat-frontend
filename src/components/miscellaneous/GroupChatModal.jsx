@@ -83,7 +83,7 @@ const GroupChatModal = ({ children }) => {
   const handleSubmit = async () => {
     if (!groupChatName || !selectedUsers) {
       toast({
-        title: "Please fill all the feilds",
+        title: "Please fill all the fields",
         status: "warning",
         duration: 5000,
         isClosable: true,
@@ -91,7 +91,7 @@ const GroupChatModal = ({ children }) => {
       });
       return;
     }
-
+  
     try {
       const config = {
         headers: {
@@ -106,19 +106,26 @@ const GroupChatModal = ({ children }) => {
         },
         config
       );
-      setChats([data, ...chats]);
-      onClose();
-      toast({
-        title: "New Group Chat Created!",
-        status: "success",
-        duration: 5000,
-        isClosable: true,
-        position: "bottom",
-      });
+  
+      if (data.success) {
+        // Ensure chats is an array before attempting to use it
+        const updatedChats = Array.isArray(chats) ? [data.data, ...chats] : [data.data];
+        setChats(updatedChats);
+        onClose(); // Close the modal
+        toast({
+          title: "New Group Chat Created!",
+          status: "success",
+          duration: 5000,
+          isClosable: true,
+          position: "bottom",
+        });
+      } else {
+        throw new Error(data.message || 'Failed to create the chat');
+      }
     } catch (error) {
       toast({
         title: "Failed to Create the Chat!",
-        description: error?.response?.data,
+        description: error.message || 'An error occurred',
         status: "error",
         duration: 5000,
         isClosable: true,
@@ -126,7 +133,7 @@ const GroupChatModal = ({ children }) => {
       });
     }
   };
-
+  
   return (
     <>
       <span onClick={onOpen}>{children}</span>

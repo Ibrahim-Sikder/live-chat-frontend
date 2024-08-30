@@ -5,12 +5,13 @@ import { Box, Stack, Text } from "@chakra-ui/layout";
 import { useToast } from "@chakra-ui/toast";
 import axios from "axios";
 import { useEffect, useState } from "react";
-
+import "./MyChat.css";
 import { Button } from "@chakra-ui/react";
 import GroupChatModal from "./miscellaneous/GroupChatModal";
 import ChatLoading from "./ChatLoading";
 import { getSender } from "../config/ChatLogics";
 import { ChatState } from "../Context/ChatProvider";
+import { getToken } from "../uitls/getToken";
 
 const MyChats = ({ fetchAgain }) => {
   const [loggedUser, setLoggedUser] = useState();
@@ -20,24 +21,16 @@ const MyChats = ({ fetchAgain }) => {
   const toast = useToast();
 
   const fetchChats = async () => {
-    // console.log(user._id);
+    const config = getToken();
     try {
-      const config = {
-        headers: {
-          Authorization: `Bearer ${user}`,
-        },
-      };
-  
-
-      const { data } = await axios.get(
+      const {data} = await axios.get(
         "http://localhost:4000/api/v1/chat",
         config
       );
-      console.log('main data',data)
-      setChats(data);
+      setChats(data.data); 
     } catch (error) {
       toast({
-        title: "Error Occured!",
+        title: "Error Occurred!",
         description: "Failed to Load the chats",
         status: "error",
         duration: 5000,
@@ -50,7 +43,6 @@ const MyChats = ({ fetchAgain }) => {
   useEffect(() => {
     setLoggedUser(JSON.parse(localStorage.getItem("userInfo")));
     fetchChats();
-    // eslint-disable-next-line
   }, [fetchAgain]);
 
   return (
@@ -97,7 +89,7 @@ const MyChats = ({ fetchAgain }) => {
       >
         {chats ? (
           <Stack overflowY="scroll">
-            {chats?.data?.map((chat) => (
+            {chats?.map((chat) => (
               <Box
                 onClick={() => setSelectedChat(chat)}
                 cursor="pointer"
