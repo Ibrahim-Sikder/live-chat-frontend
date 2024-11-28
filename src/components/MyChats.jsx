@@ -11,7 +11,6 @@ import GroupChatModal from "./miscellaneous/GroupChatModal";
 import ChatLoading from "./ChatLoading";
 import { getSender } from "../config/ChatLogics";
 import { ChatState } from "../Context/ChatProvider";
-import { getToken } from "../uitls/getToken";
 
 const MyChats = ({ fetchAgain }) => {
   const [loggedUser, setLoggedUser] = useState();
@@ -21,13 +20,17 @@ const MyChats = ({ fetchAgain }) => {
   const toast = useToast();
 
   const fetchChats = async () => {
-    const config = getToken();
+    const config = {
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
+    };
     try {
-      const {data} = await axios.get(
+      const { data } = await axios.get(
         "http://localhost:4000/api/v1/chat",
         config
       );
-      setChats(data.data); 
+      setChats(data.data);
     } catch (error) {
       toast({
         title: "Error Occurred!",

@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 export const getToken = () => {
   let token = localStorage.getItem('userInfo'); // or 'token', depending on your key
   

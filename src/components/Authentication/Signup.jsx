@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { Button } from "@chakra-ui/button";
 import { FormControl, FormLabel } from "@chakra-ui/form-control";
 import { Input, InputGroup, InputRightElement } from "@chakra-ui/input";
@@ -56,7 +57,7 @@ const Signup = () => {
         config
       );
       const { data } = response;
-      console.log(data)
+   
       if (data) {
         toast({
           title: "Registration Successful",
@@ -66,7 +67,7 @@ const Signup = () => {
           position: "bottom",
         });
 
-        localStorage.setItem("userInfo", JSON.stringify(data?.data?.token));
+        localStorage.setItem("userInfo", JSON.stringify(data?.data));
         setPicLoading(false);
         navigate("/chats");
       } else {
@@ -116,7 +117,7 @@ const Signup = () => {
           setPicLoading(false);
         })
         .catch((err) => {
-          console.log(err);
+      
           setPicLoading(false);
         });
     } else {

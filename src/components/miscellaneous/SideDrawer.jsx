@@ -82,7 +82,8 @@ function SideDrawer() {
         `http://localhost:4000/api/v1/users?search=${search}`,
         config
       );
-        setLoading(false);
+      setLoading(false);
+
       setSearchResult(data);
     } catch (error) {
       toast({
@@ -97,14 +98,12 @@ function SideDrawer() {
   };
 
   const accessChat = async (userId) => {
-
-
     try {
       setLoadingChat(true);
       const config = {
         headers: {
           "Content-type": "application/json",
-          Authorization: `Bearer ${user}`,
+          Authorization: `Bearer ${user.token}`,
         },
       };
       const { data } = await axios.post(
@@ -113,8 +112,9 @@ function SideDrawer() {
         config
       );
 
-      if (!chats?.data.find((c) => c._id === data?._id)) setChats([data, ...chats]);
-      setSelectedChat(data);
+      if (!chats?.data?.find((c) => c._id === data?._id))
+        setChats([data?.data, ...chats]);
+      setSelectedChat(data?.data);
       setLoadingChat(false);
       onClose();
     } catch (error) {

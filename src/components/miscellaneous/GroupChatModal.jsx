@@ -57,11 +57,14 @@ const GroupChatModal = ({ children }) => {
       setLoading(true);
       const config = {
         headers: {
-          Authorization: `Bearer ${user}`,
+          Authorization: `Bearer ${user.token}`,
         },
       };
-      const { data } = await axios.get(`http://localhost:4000/api/v1/users?search=${search}`, config);
-      console.log(data);
+      const { data } = await axios.get(
+        `http://localhost:4000/api/v1/users?search=${search}`,
+        config
+      );
+
       setLoading(false);
       setSearchResult(data);
     } catch (error) {
@@ -91,11 +94,11 @@ const GroupChatModal = ({ children }) => {
       });
       return;
     }
-  
+
     try {
       const config = {
         headers: {
-          Authorization: `Bearer ${user}`,
+          Authorization: `Bearer ${user.token}`,
         },
       };
       const { data } = await axios.post(
@@ -106,10 +109,12 @@ const GroupChatModal = ({ children }) => {
         },
         config
       );
-  
+
       if (data.success) {
         // Ensure chats is an array before attempting to use it
-        const updatedChats = Array.isArray(chats) ? [data.data, ...chats] : [data.data];
+        const updatedChats = Array.isArray(chats)
+          ? [data.data, ...chats]
+          : [data.data];
         setChats(updatedChats);
         onClose(); // Close the modal
         toast({
@@ -120,12 +125,12 @@ const GroupChatModal = ({ children }) => {
           position: "bottom",
         });
       } else {
-        throw new Error(data.message || 'Failed to create the chat');
+        throw new Error(data.message || "Failed to create the chat");
       }
     } catch (error) {
       toast({
         title: "Failed to Create the Chat!",
-        description: error.message || 'An error occurred',
+        description: error.message || "An error occurred",
         status: "error",
         duration: 5000,
         isClosable: true,
@@ -133,7 +138,7 @@ const GroupChatModal = ({ children }) => {
       });
     }
   };
-  
+
   return (
     <>
       <span onClick={onOpen}>{children}</span>

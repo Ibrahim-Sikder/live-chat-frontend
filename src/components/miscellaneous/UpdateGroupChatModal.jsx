@@ -23,7 +23,7 @@ import { useState } from "react";
 import { ChatState } from "../../Context/ChatProvider";
 import UserBadgeItem from "../userAvatar/UserBadgeItem";
 import UserListItem from "../userAvatar/UserListItem";
-import { getToken } from "../../uitls/getToken";
+
 
 const UpdateGroupChatModal = ({ fetchMessages, fetchAgain, setFetchAgain }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -44,13 +44,18 @@ const UpdateGroupChatModal = ({ fetchMessages, fetchAgain, setFetchAgain }) => {
 
     try {
       setLoading(true);
-      const token = getToken();
-      console.log(token);
+    
+      const config = {
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+        },
+      };
+    
       const { data } = await axios.get(
         `http://localhost:4000/api/v1/users?search=${search}`,
-        token
+        config
       );
-      console.log(data);
+
       setLoading(false);
       setSearchResult(data?.data);
     } catch (error) {
@@ -71,18 +76,21 @@ const UpdateGroupChatModal = ({ fetchMessages, fetchAgain, setFetchAgain }) => {
 
     try {
       setRenameLoading(true);
-      const token = getToken();
+
+      const config = {
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+        },
+      };
       const { data } = await axios.patch(
         `http://localhost:4000/api/v1/chat/rename`,
         {
           chatId: selectedChat._id,
           chatName: groupChatName,
         },
-        token
+        config
       );
 
-      console.log(data?.data);
-      // setSelectedChat("");
       setSelectedChat(data?.data);
       setFetchAgain(!fetchAgain);
       setRenameLoading(false);
@@ -125,14 +133,19 @@ const UpdateGroupChatModal = ({ fetchMessages, fetchAgain, setFetchAgain }) => {
 
     try {
       setLoading(true);
-      const token = getToken();
+      
+      const config = {
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+        },
+      };
       const { data } = await axios.put(
         `http://localhost:4000/api/v1/chat/groupadd`,
         {
           chatId: selectedChat?._id,
           userId: user1?._id,
         },
-        token
+        config
       );
 
       setSelectedChat(data?.data);
@@ -166,7 +179,12 @@ const UpdateGroupChatModal = ({ fetchMessages, fetchAgain, setFetchAgain }) => {
   
     try {
       setLoading(true);
-      const config = getToken();
+     
+      const config = {
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+        },
+      };
   
       const { data } = await axios.put(
         `http://localhost:4000/api/v1/chat/groupremove`,
@@ -178,9 +196,9 @@ const UpdateGroupChatModal = ({ fetchMessages, fetchAgain, setFetchAgain }) => {
       );
   
       if (user1?._id === user?._id) {
-        setSelectedChat(null); // Clear the selected chat if the current user is removed
+        setSelectedChat(null); 
       } else {
-        setSelectedChat(data); // Update the selected chat with new data after removal
+        setSelectedChat(data);
       }
   
       setFetchAgain(!fetchAgain);

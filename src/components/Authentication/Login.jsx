@@ -43,7 +43,7 @@ const Login = () => {
         { email, password },
         config
       );
-      console.log(data)
+
 
       toast({
         title: "Login Successful",
@@ -53,7 +53,7 @@ const Login = () => {
         position: "bottom",
       });
 
-      localStorage.setItem("userInfo", JSON.stringify(data));
+      localStorage.setItem("userInfo", JSON.stringify(data?.data));
       setLoading(false);
       navigate("/chats");
     } catch (error) {
